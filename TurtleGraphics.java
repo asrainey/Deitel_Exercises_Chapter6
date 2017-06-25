@@ -12,21 +12,19 @@ import java.util.Scanner;
 public class TurtleGraphics
 {
 	static int[][] floor = new int[20][20];
- 	static int nextCommand = 0;
-
-	static int[] turtle = {0, 0, 3, 1};  // row, column, orientation, drawStatus
-	// Orientation 1 = up, 2 = down, 3 = right, 4 = left
-	// drawStatus 1 = up, 2 = down
 
 	public static void main(String[] args)
 	{
 		TurtleGraphics player = new TurtleGraphics();
 
-		while (true)
-		{
-			int[] commands = player.enterCommands();
-			player.processCommand(turtle, commands);
-		}
+		int[] turtle = {0, 0, 3, 1};
+		// row, column, orientation, drawStatus
+	 // Orientation 1 = up, 2 = down, 3 = right, 4 = left
+	 // drawStatus 1 = up, 2 = down
+	 	player.welcomeToGame();
+		int[] commands = player.enterCommands();
+		System.out.println("Your program has been entered.");
+		player.processCommand(turtle, commands);
 
 	}
 
@@ -185,18 +183,28 @@ public class TurtleGraphics
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("If you need to see a list of commands, enter 0");
-		System.out.print("Please enter your command program with a return after" +
-			" each number. For 5(forward), put the number of steps on the subsequent "
-			+ "line. Enter 9 to end your program.");
+		System.out.println("Please enter your command program ");
+		System.out.println("with a return after each number.");
+		System.out.println("For 5 (forward command), put the number of steps to"
+			+ " move on the subsequent line. Enter 9 to end your program.\n");
 
-		int k = 0;
 		int[] commands = new int[50];
 
-		do {
-			commands[k] = input.nextInt();
-			k++;
-		} while (commands[k] != 9);
+		int k = 0;
 
+		while (k < commands.length)
+		{
+			commands[k] = input.nextInt();
+
+			if (commands[k] == 9)
+			{
+				break;
+			}
+			else
+			{
+				k++;
+			}
+		}
 		return commands;
 	}
 }

@@ -18,13 +18,7 @@ public class TurtleGraphics
 	// Orientation 1 = up, 2 = down, 3 = right, 4 = left
 	// drawStatus 1 = up, 2 = down
 
-	 // Need to set commands to change 0s in array to 1s
-	 // Turning right or left determines which way you are going next
-	 // Up or down if previously going L or R, and vice versa
-	 // When pen is down need to record - on the terminal for each slot in
-  	// array that is crossed
-
-	public void playGame()
+	public static void main(String[] args)
 	{
 		TurtleGraphics player = new TurtleGraphics();
 
@@ -36,60 +30,23 @@ public class TurtleGraphics
 
 	}
 
-	// COMPLETE
-	public void welcomeToGame()
-	{
-		System.out.println("Welcome to Turtle Graphics.");
-		System.out.println("Your turtle works on a 20x20 grid.");
-		System.out.println("It starts in the top left corner[0, 0] with pen up.");
-	}
-
-	// COMPLETE
-	public void displayCommands()
-	{
-		System.out.printf("The turtle graphics commands are as follows:\n");
-		System.out.printf("1 = Pen up\n2 = Pen down\n3 = Turn right\n 4 = Turn left");
-		System.out.printf("5 = move forward\n");
-		System.out.printf("6 = display the 20x20 array\n9 = Exit");
-	}
-
 	// IN PROGRESS
-	public int[] enterCommands()
-	{
-		Scanner input = new Scanner(System.in);
-
-		System.out.println("If you need to see a list of commands, enter 0");
-		System.out.print("Please enter your command program with a return after" +
-			" each number. For 5(forward), put the number of steps on the subsequent "
-			+ "line. Enter 9 to end your program.");
-
-		int k = 0;
-		int[] commands = new int[50];
-
-		do
-		{
-			commands[k] = input.nextInt();
-			k++;
-		} while (commands[k] != 9);
-
-		return commands;
-	}
-
-	// IN PROGRESS
-	public int[] processCommand(int[] location, int[] command)
+	public void processCommand(int[] location, int[] command)
 	{
 		// location array - row, column, orientation, drawStatus
-		for(int item : command)
+		for(int k = 0; k < command.length; k++)
 		{
 			if(command == 1 || command == 2)  // this is going to return a new drawStatus
 			{
 				location[3] = command;
-				return location;
 			}
 			else if(command == 3 || command == 4)  // this is going to return orientation
 			{
 				location[2] = turnTurtle(location);
-				return location;
+			}
+			else if(command == 5)
+			{
+				moveTurtle(location, command[k+ 1]);
 			}
 			else if(command == 6)  // display array
 			{
@@ -100,17 +57,17 @@ public class TurtleGraphics
 			System.out.println("Thank you for playing.");
 			System.exit(0);
 			}
-			else  // this is for moving forward getting # of spaces and not command #
+			else  // to skip lines that are forward steps
 			{
-			moveTurtle(command);
+			k++;
 			}
 		}
 	}
 
 	// COMPLETE
-	public void drawLine(int[] location)
+	public void drawLine(int[] details)
 	{
-		int value = location[3];
+		int value = details[3];
 		if(value == 1)
 		{
 			System.out.print("-");
@@ -122,12 +79,36 @@ public class TurtleGraphics
 	}
 
 	// IN PROGRESS
-	public void moveTurtle(int[] location, int units)
+	// if floor array is [row][column] then left and right add or subtract row #
+	// and up/down add or subtract column#
+	// details array - row, column, orientation, drawStatus
+	public void moveTurtle(int[] details, int units)
 	{
-
 		for(int k = 0; k < units; k++)
-		{
-		drawLine(location[3]);
+			{
+				drawLine(details[3]);
+				switch(details[2])
+				{
+					case 1:
+					details[0] += 1;
+					break;
+
+					case 2:
+					details[0] -= 1;
+					break;
+
+					case 3:
+					details[1] += 1;
+					break;
+
+					case 4:
+					details[1] -= 1;
+					break;
+				}
+				if(details[3] == 2)
+				{
+					floor[details[0]][details[1]] = 1;
+				}
 		}
 	}
 
@@ -179,20 +160,43 @@ public class TurtleGraphics
 	{
 
 	}
-}
 
-/*public static void main(String[] args)
-{
-	TurtleGraphics turtle1 = new TurtleGraphics();
 
-	turtle1.welcomeToGame();
-
-	while (true)
+	// COMPLETE
+	public void welcomeToGame()
 	{
-	nextCommand = turtle1.enterCommand();
-	turtle1.processCommand(nextCommand);
+		System.out.println("Welcome to Turtle Graphics.");
+		System.out.println("Your turtle works on a 20x20 grid.");
+		System.out.println("It starts in the top left corner[0, 0] with pen up.");
 	}
 
+	// COMPLETE
+	public void displayCommands()
+	{
+		System.out.printf("The turtle graphics commands are as follows:\n");
+		System.out.printf("1 = Pen up\n2 = Pen down\n3 = Turn right\n 4 = Turn left");
+		System.out.printf("5 = move forward\n");
+		System.out.printf("6 = display the 20x20 array\n9 = Exit");
+	}
 
+	// COMPLETE
+	public int[] enterCommands()
+	{
+		Scanner input = new Scanner(System.in);
 
-}*/
+		System.out.println("If you need to see a list of commands, enter 0");
+		System.out.print("Please enter your command program with a return after" +
+			" each number. For 5(forward), put the number of steps on the subsequent "
+			+ "line. Enter 9 to end your program.");
+
+		int k = 0;
+		int[] commands = new int[50];
+
+		do {
+			commands[k] = input.nextInt();
+			k++;
+		} while (commands[k] != 9);
+
+		return commands;
+	}
+}

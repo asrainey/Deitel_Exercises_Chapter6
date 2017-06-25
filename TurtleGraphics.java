@@ -25,7 +25,7 @@ public class TurtleGraphics
 		while (true)
 		{
 			int[] commands = player.enterCommands();
-			processCommand(turtle, nextCommand);
+			player.processCommand(turtle, commands);
 		}
 
 	}
@@ -36,23 +36,23 @@ public class TurtleGraphics
 		// location array - row, column, orientation, drawStatus
 		for(int k = 0; k < command.length; k++)
 		{
-			if(command == 1 || command == 2)  // this is going to return a new drawStatus
+			if(command[k] == 1 || command[k] == 2)  // this is going to return a new drawStatus
 			{
-				location[3] = command;
+				location[3] = command[k];
 			}
-			else if(command == 3 || command == 4)  // this is going to return orientation
+			else if(command[k] == 3 || command[k] == 4)  // this is going to return orientation
 			{
-				location[2] = turnTurtle(location);
+				turnTurtle(location, command[k]);
 			}
-			else if(command == 5)
+			else if(command[k] == 5)
 			{
 				moveTurtle(location, command[k+ 1]);
 			}
-			else if(command == 6)  // display array
+			else if(command[k] == 6)  // display array
 			{
 
 			}
-			else if(command == 9)  // end game
+			else if(command[k] == 9)  // end game
 			{
 			System.out.println("Thank you for playing.");
 			System.exit(0);
@@ -86,7 +86,7 @@ public class TurtleGraphics
 	{
 		for(int k = 0; k < units; k++)
 			{
-				drawLine(details[3]);
+				drawLine(details);
 				switch(details[2])
 				{
 					case 1:

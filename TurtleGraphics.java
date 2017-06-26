@@ -22,9 +22,15 @@ public class TurtleGraphics
 	 // Orientation 1 = up, 2 = down, 3 = right, 4 = left
 	 // drawStatus 1 = up, 2 = down
 	 	player.welcomeToGame();
+		System.out.printf("\nOriginal Turtle array is : %d, %d, %d, %d\n",
+			turtle[0], turtle[1], turtle[2], turtle[3]);  // for testing
 		int[] commands = player.enterCommands();
-		System.out.println("Your program has been entered.");
+		System.out.println("Your program has been entered.");  // for testing
+		player.drawLine(turtle); // for testing
+		System.out.println();
 		player.processCommand(turtle, commands);
+		System.out.printf("\nTurtle array is : %d, %d, %d, %d\n",
+			turtle[0], turtle[1], turtle[2], turtle[3]); // for testing
 
 	}
 
@@ -40,16 +46,17 @@ public class TurtleGraphics
 			}
 			else if(command[k] == 3 || command[k] == 4)  // this is going to return orientation
 			{
-				turnTurtle(location, command[k]);
+				location[2] = turnTurtle(location, command[k]);
 			}
 			else if(command[k] == 5)
 			{
 				moveTurtle(location, command[k+ 1]);
 			}
-			else if(command[k] == 6)  // display array
-			{
-
-			}
+			//else if(command[k] == 6)  // display array
+			//{
+			//	for(value : floor)
+			//	System.out.printf("%d", floor[item])
+			//}
 			else if(command[k] == 9)  // end game
 			{
 			System.out.println("Thank you for playing.");
@@ -103,15 +110,15 @@ public class TurtleGraphics
 					details[1] -= 1;
 					break;
 				}
-				if(details[3] == 2)
-				{
-					floor[details[0]][details[1]] = 1;
-				}
+				//if(details[3] == 2)
+				//{
+				//	floor[details[0]][details[1]] = 1;
+				//}
 		}
 	}
 
 	// COMPLETE
-	public static int[] turnTurtle(int [] location, int command)
+	public static int turnTurtle(int [] location, int command)
 	{
 		// Orientation: 1 = up, 2 = down, 3 = right, 4 = left
 
@@ -150,11 +157,11 @@ public class TurtleGraphics
 			}
 		}
 
-		return location;
+		return location[2];
 	}
 
 	// IN PROGRESS
-	public void displayArray()
+	public void displayArray(int[][] array)
 	{
 
 	}

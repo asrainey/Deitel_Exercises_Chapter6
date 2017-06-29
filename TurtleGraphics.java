@@ -11,12 +11,11 @@ import java.util.Scanner;
 
 public class TurtleGraphics
 {
-	static int[][] floor = new int[20][20];
-
 	public static void main(String[] args)
 	{
 		TurtleGraphics player = new TurtleGraphics();
 
+		int[][] floor = new int[20][20];
 		int[] turtle = {0, 0, 3, 1};
 		// row, column, orientation, drawStatus
 	 // Orientation 1 = up, 2 = down, 3 = right, 4 = left
@@ -26,19 +25,18 @@ public class TurtleGraphics
 			turtle[0], turtle[1], turtle[2], turtle[3]);  // for testing
 		int[] commands = player.enterCommands();
 		System.out.println("Your program has been entered.");  // for testing
-		player.drawLine(turtle); // for testing
 		System.out.println();
-		player.processCommand(turtle, commands);
+		player.processCommand(floor, turtle, commands);
 		System.out.printf("\nTurtle array is : %d, %d, %d, %d\n",
 			turtle[0], turtle[1], turtle[2], turtle[3]); // for testing
 
 	}
 
 	// IN PROGRESS
-	public void processCommand(int[] location, int[] command)
+	public int[] processCommand(int[][] floor, int[] location, int[] command)
 	{
 		// location array - row, column, orientation, drawStatus
-		for(int k = 0; k < command.length; k++)
+		for(int k : command)
 		{
 			if(command[k] == 1 || command[k] == 2)  // this is going to return a new drawStatus
 			{
@@ -46,124 +44,117 @@ public class TurtleGraphics
 			}
 			else if(command[k] == 3 || command[k] == 4)  // this is going to return orientation
 			{
-				location[2] = turnTurtle(location, command[k]);
+				location[2] = turnTurtle(location[2], command[k]);
 			}
 			else if(command[k] == 5)
 			{
-				moveTurtle(location, command[k+ 1]);
+				location = moveTurtle(location, command[k + 1]);
+				k++;
 			}
-			//else if(command[k] == 6)  // display array
-			//{
-			//	for(value : floor)
-			//	System.out.printf("%d", floor[item])
-			//}
-			else if(command[k] == 9)  // end game
+			else if(command[k] == 6)  // display array
 			{
-			System.out.println("Thank you for playing.");
-			System.exit(0);
-			}
-			else  // to skip lines that are forward steps
-			{
-			k++;
+				for(int row[] : floor)
+				{
+					for(int column : row)
+					System.out.printf("%d  ", column);
+
+				System.out.println();
+				}
 			}
 		}
+		return location;
 	}
 
-	// COMPLETE
-	public void drawLine(int[] details)
-	{
-		int value = details[3];
-		if(value == 1)
-		{
-			System.out.print("-");
-		}
-		else
-		{
-			System.out.print(" ");
-		}
-	}
+
 
 	// IN PROGRESS
 	// if floor array is [row][column] then left and right add or subtract row #
 	// and up/down add or subtract column#
 	// details array - row, column, orientation, drawStatus
-	public void moveTurtle(int[] details, int units)
+	public static int[] moveTurtle(int[] details, int units)
 	{
 		for(int k = 0; k < units; k++)
+		{
+			if(details[2] == 1)
 			{
-				drawLine(details);
-				switch(details[2])
-				{
-					case 1:
-					details[0] += 1;
-					break;
-
-					case 2:
-					details[0] -= 1;
-					break;
-
-					case 3:
-					details[1] += 1;
-					break;
-
-					case 4:
-					details[1] -= 1;
-					break;
-				}
-				//if(details[3] == 2)
-				//{
-				//	floor[details[0]][details[1]] = 1;
-				//}
+				details[0] += 1;
+			}
+			else if(details[2] == 2)
+			{
+				details[0] -= 1;
+			}
+			else if(details[2] == 3)
+			{
+				details[1] += 1;
+			}
+			else
+			{
+				details[1] -= 1;
+			}
 		}
+		return details;
 	}
 
-	// COMPLETE
-	public static int turnTurtle(int [] location, int command)
+
+	// IN PROGRESS
+	public static int turnTurtle(int orientation, int command)
 	{
 		// Orientation: 1 = up, 2 = down, 3 = right, 4 = left
 
 		if (command	== 3)   // turn right
 		{
-			switch(location[2])
+			if(orientation == 1)
 			{
-				case 1: location[2] = 3;
-						break;
-
-				case 2: location[2] = 4;
-						break;
-
-				case 3: location[2] = 2;
-						break;
-
-				case 4: location[2] = 1;
-						break;
+				orientation = 3;
+			}
+			else if(orientation == 2)
+			{
+				orientation = 4;
+			}
+			else if(orientation == 3)
+			{
+				orientation = 2;
+			}
+			else
+			{
+				orientation = 1;
 			}
 		}
+
 		else // command == 4 turn left
 		{
-			switch(location[2])
+			if(command == 4)
 			{
-				case 1: location[2] = 4;
-						break;
-
-				case 2: location[2] = 3;
-						break;
-
-				case 3: location[2] = 1;
-						break;
-
-				case 4: location[2] = 2;
-						break;
+				if(orientation == 1)
+				{
+					orientation = 4;
+				}
+				else if(orientation == 2)
+				{
+					orientation = 3;
+				}
+				else if(orientation == 3)
+				{
+					orientation = 1;
+				}
+				else
+				{
+					orientation = 2;
+				}
 			}
 		}
 
-		return location[2];
+		return orientation;
 	}
 
 	// IN PROGRESS
-	public void displayArray(int[][] array)
+	public static int[][] updateLocation(int[][] array, int turtle[])
 	{
-
+		if(turtle[3] == 2)
+		{
+			array[turtle[0]][turtle[1]] = 1;
+		}
+		return array;
 	}
 
 
@@ -213,5 +204,20 @@ public class TurtleGraphics
 			}
 		}
 		return commands;
+	}
+
+
+// COMPLETE
+	public void drawLine(int[] details)
+	{
+		int value = details[3];
+		if(value == 1)
+		{
+			System.out.print("-");
+		}
+		else
+		{
+			System.out.print(" ");
+		}
 	}
 }

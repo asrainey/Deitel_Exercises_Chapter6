@@ -1,4 +1,4 @@
-// Exercise 6.21 TurtleGraphics.java
+// Exercise 6.21 TurtleGraphics2.java
 // This application will create a computerized sketchpad by simulating
 // the movements of a turtle. The turtle holds a pen in one of two positions
 // up or down. When the pen is down, the turtle traces shapes as it moves
@@ -8,45 +8,76 @@
 //            5, 10 = move forward 10 spaces (can change this number)
 //            6 = display the 20x20 array, 9 = End of data (sentinel)
 import java.util.Scanner;
+import java.lang.ArrayIndexOutOfBoundsException;
 
-public class TurtleGraphicsTest
+public class TurtleGraphics2
 {
 	private static int[][] floor = new int[20][20];
 	private static int[] turtle = {0, 0, 3, 1};
-	// row, column, orientation, drawStatus
- // Orientation 1 = up, 2 = down, 3 = right, 4 = left
- // drawStatus 1 = up, 2 = down
 
 	public static void main(String[] args)
 	{
-		TurtleGraphicsTest player = new TurtleGraphicsTest();
+		TurtleGraphics2 player = new TurtleGraphics2();
+		player.welcomeToGame();
+		player.enterCommands();
 
-	 	player.welcomeToGame();
-		int[] commands = player.enterCommands();
-		player.processCommand(commands);
 
 	}
 
-	// IN PROGRESS
-	public void processCommand(int[] command)
+
+	// COMPLETE
+	public void welcomeToGame()
 	{
-		// location array - row, column, orientation, drawStatus
-		for(int k = 0; k < command.length; k++)
+		System.out.println("Welcome to Turtle Graphics.");
+		System.out.println("Your turtle works on a 20x20 grid.");
+		System.out.println("It starts in the top left corner[0, 0] with pen up.");
+	}
+
+	// COMPLETE
+	public static void displayCommands()
+	{
+		System.out.printf("The turtle graphics commands are as follows:\n");
+		System.out.printf("1 = Pen up\n2 = Pen down\n3 = Turn right\n 4 = Turn left");
+		System.out.printf("5, n = move forward, number of spaces\n");
+		System.out.printf("6 = display the 20x20 array\n9 = Exit");
+	}
+
+	public void enterCommands()
+	{
+		Scanner input = new Scanner(System.in);
+
+		System.out.println("If you need to see a list of commands, enter 0");
+		System.out.println("Please enter your command program ");
+		System.out.println("with a return after each number.");
+		System.out.println("Enter 9 to end your program.");
+
+		String command = input.nextLine();
+
+		while (!command.equalsIgnoreCase("9"))
 		{
-			if(command[k] == 1 || command[k] == 2)  // this is going to return a new drawStatus
+			if(command.equalsIgnoreCase("0"))
 			{
-				turtle[3] = command[k];
+				displayCommands();
 			}
-			else if(command[k] == 3 || command[k] == 4)  // this is going to return orientation
+			else if(command.equalsIgnoreCase("1") || command.equalsIgnoreCase("2"))
+			// this is going to return a new drawStatus
 			{
-				turnTurtle(command[k]);
+				int commandValue = Integer.parseInt(command);
+				turtle[3] = commandValue;
 			}
-			else if(command[k] == 5)
+			else if(command.equalsIgnoreCase("3") || command.equalsIgnoreCase("4"))
+			// this is going to return orientation
 			{
-				updateFloor(command[k+1]);
-				k = k + 1;
+				int commandValue = Integer.parseInt(command);
+				turnTurtle(commandValue);
 			}
-			else if(command[k] == 6)  // display array
+			else if(command.contains("5"))
+			{
+				String[] moveCommands = command.split(",");
+				int distance = Integer.parseInt(moveCommands[1]);
+				updateFloor(distance);
+			}
+			else if(command.equalsIgnoreCase("6"))  // display array
 			{
 				for(int row[] : floor)
 				{
@@ -61,12 +92,13 @@ public class TurtleGraphicsTest
 							System.out.print(" ");
 						}
 					}
-				System.out.println();
+					System.out.println();
 				}
 			}
+			command = input.nextLine();
 		}
-	}
 
+	}
 
 	public static void updateFloor(int command)
 	{
@@ -118,7 +150,7 @@ public class TurtleGraphicsTest
 			{
 				turtle[2] = 2;
 			}
-			else
+			else if(turtle[2] == 4)
 			{
 				turtle[2] = 1;
 			}
@@ -147,56 +179,4 @@ public class TurtleGraphicsTest
 		}
 	}
 
-	// COMPLETE
-	public void welcomeToGame()
-	{
-		System.out.println("Welcome to Turtle Graphics.");
-		System.out.println("Your turtle works on a 20x20 grid.");
-		System.out.println("It starts in the top left corner[0, 0] with pen up.");
-	}
-
-	// COMPLETE
-	public void displayCommands()
-	{
-		System.out.printf("The turtle graphics commands are as follows:\n");
-		System.out.printf("1 = Pen up\n2 = Pen down\n3 = Turn right\n 4 = Turn left");
-		System.out.printf("5 = move forward\n");
-		System.out.printf("6 = display the 20x20 array\n9 = Exit");
-	}
-
-	// COMPLETE
-	public int[] enterCommands()
-	{
-		Scanner input = new Scanner(System.in);
-
-		System.out.println("If you need to see a list of commands, enter 0");
-		System.out.println("Please enter your command program ");
-		System.out.println("with a return after each number.");
-		System.out.println("For 5 (forward command), put the number of steps to"
-			+ " move on the subsequent line. Enter 9 to end your program.\n");
-
-		int[] commands = new int[50];
-
-		int k = 0;
-
-		while (k < commands.length)
-		{
-			commands[k] = input.nextInt();
-
-			if(commands[k] == 0)
-			{
-				displayCommands();
-			}
-
-			if (commands[k] == 9)
-			{
-				break;
-			}
-			else
-			{
-				k++;
-			}
-		}
-		return commands;
-	}
 }

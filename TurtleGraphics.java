@@ -30,26 +30,28 @@ public class TurtleGraphics
 		System.out.printf("\nTurtle array is : %d, %d, %d, %d\n",
 			turtle[0], turtle[1], turtle[2], turtle[3]); // for testing
 
+
 	}
 
 	// IN PROGRESS
-	public int[] processCommand(int[][] floor, int[] location, int[] command)
+	public int[] processCommand(int[][] floor, int[] turtle, int[] command)
 	{
 		// location array - row, column, orientation, drawStatus
-		for(int k : command)
+		for(int k = 0; k < command.length; k++)
 		{
 			if(command[k] == 1 || command[k] == 2)  // this is going to return a new drawStatus
 			{
-				location[3] = command[k];
+				turtle[3] = command[k];
 			}
 			else if(command[k] == 3 || command[k] == 4)  // this is going to return orientation
 			{
-				location[2] = turnTurtle(location[2], command[k]);
+				turtle[2] = turnTurtle(turtle[2], command[k]);
 			}
 			else if(command[k] == 5)
 			{
-				location = moveTurtle(location, command[k + 1]);
-				k++;
+				floor = updateFloor(turtle, command[k+1], floor);
+				turtle = moveTurtle(turtle, command[k + 1]);
+				k = k + 1;
 			}
 			else if(command[k] == 6)  // display array
 			{
@@ -62,7 +64,8 @@ public class TurtleGraphics
 				}
 			}
 		}
-		return location;
+		draw(turtle, floor);
+		return turtle;
 	}
 
 
@@ -71,28 +74,59 @@ public class TurtleGraphics
 	// if floor array is [row][column] then left and right add or subtract row #
 	// and up/down add or subtract column#
 	// details array - row, column, orientation, drawStatus
-	public static int[] moveTurtle(int[] details, int units)
+	public static int[] moveTurtle(int[] turtle, int units)
 	{
 		for(int k = 0; k < units; k++)
 		{
-			if(details[2] == 1)
+			if(turtle[2] == 1)
 			{
-				details[0] += 1;
+				turtle[0] += 1;
 			}
-			else if(details[2] == 2)
+			else if(turtle[2] == 2)
 			{
-				details[0] -= 1;
+				turtle[0] -= 1;
 			}
-			else if(details[2] == 3)
+			else if(turtle[2] == 3)
 			{
-				details[1] += 1;
+				turtle[1] += 1;
 			}
 			else
 			{
-				details[1] -= 1;
+				turtle[1] -= 1;
 			}
 		}
-		return details;
+		return turtle;
+	}
+
+	public static int[][] updateFloor(int[] turtle, int command, int[][] floor)
+	{
+		if(turtle[3] == 2)
+		{
+			for(int k = 0; k < command; k++)
+			{
+				if(turtle[2] == 1)
+				{
+					turtle[0] += 1;
+					floor[turtle[0]][turtle[1]] = 1;
+				}
+				else if(turtle[2] == 2)
+				{
+					turtle[0] -= 1;
+					floor[turtle[0]][turtle[1]] = 1;
+				}
+				else if(turtle[2] == 3)
+				{
+					turtle[1] += 1;
+					floor[turtle[0]][turtle[1]] = 1;
+				}
+				else
+				{
+					turtle[1] -= 1;
+					floor[turtle[0]][turtle[1]] = 1;
+				}
+			}
+		}
+		return floor;
 	}
 
 
@@ -120,7 +154,6 @@ public class TurtleGraphics
 				orientation = 1;
 			}
 		}
-
 		else // command == 4 turn left
 		{
 			if(command == 4)
@@ -208,16 +241,21 @@ public class TurtleGraphics
 
 
 // COMPLETE
-	public void drawLine(int[] details)
+	public void draw(int[] turtle, int[][] floor)
 	{
-		int value = details[3];
-		if(value == 1)
+		for(int row[] : floor)
 		{
-			System.out.print("-");
-		}
-		else
-		{
-			System.out.print(" ");
+			for(int column : row)
+			{
+				if(row[column] == 1)
+				{
+					System.out.printf("-");
+				}
+				else
+				{
+					System.out.print(" ");
+				}
+			}
 		}
 	}
 }
